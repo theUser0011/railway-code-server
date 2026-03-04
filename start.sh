@@ -2,25 +2,31 @@
 
 PORT=${PORT:-8080}
 
-echo "=================================="
-echo "Checking code-server config file"
-echo "=================================="
+echo "================================="
+echo "Container starting..."
+echo "Current user: $(whoami)"
+echo "================================="
 
-CONFIG_PATH="/root/.config/code-server/config.yaml"
+CONFIG_FILE="/root/.config/code-server/config.yaml"
 
-if [ -f "$CONFIG_PATH" ]; then
-    echo "Config file found at: $CONFIG_PATH"
-    echo "----- CONFIG CONTENT START -----"
-    cat $CONFIG_PATH
-    echo "----- CONFIG CONTENT END -----"
+echo "Checking if config exists..."
+
+if [ -f "$CONFIG_FILE" ]; then
+    echo "Config already exists:"
+    echo "---------------------------------"
+    cat "$CONFIG_FILE"
+    echo "---------------------------------"
 else
-    echo "Config file does not exist yet."
+    echo "Config does NOT exist yet."
 fi
 
-echo "=================================="
-echo "Starting code-server..."
-echo "=================================="
+echo "Listing config directory:"
+ls -la /root/.config/code-server || true
 
-code-server \
---bind-addr 0.0.0.0:$PORT \
-/home/coder/project
+echo "================================="
+echo "Starting code-server..."
+echo "================================="
+
+exec code-server \
+  --bind-addr 0.0.0.0:$PORT \
+  /home/coder/project
