@@ -2,31 +2,27 @@
 
 PORT=${PORT:-8080}
 
-echo "================================="
-echo "Container starting..."
-echo "Current user: $(whoami)"
-echo "================================="
+echo "=================================="
+echo "Checking code-server config file"
+echo "=================================="
 
-CONFIG_FILE="/root/.config/code-server/config.yaml"
+CONFIG_PATH="/root/.config/code-server/config.yaml"
 
-echo "Checking if config exists..."
-
-if [ -f "$CONFIG_FILE" ]; then
-    echo "Config already exists:"
-    echo "---------------------------------"
-    cat "$CONFIG_FILE"
-    echo "---------------------------------"
+if [ -f "$CONFIG_PATH" ]; then
+    echo "Config file found at: $CONFIG_PATH"
+    echo "----- CONFIG CONTENT START -----"
+    cat $CONFIG_PATH
+    echo "----- CONFIG CONTENT END -----"
 else
-    echo "Config does NOT exist yet."
+    echo "Config file does not exist yet."
 fi
 
-echo "Listing config directory:"
-ls -la /root/.config/code-server || true
-
-echo "================================="
+echo "=================================="
 echo "Starting code-server..."
-echo "================================="
+echo "=================================="
 
+# code-server will use the $PASSWORD variable from Railway automatically
 exec code-server \
   --bind-addr 0.0.0.0:$PORT \
-  /home/coder/project 
+  --auth password \
+  /home/coder/project
