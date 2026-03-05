@@ -8,11 +8,13 @@ RUN apt-get update && \
 WORKDIR /home/coder/project
 
 COPY requirements.txt .
-RUN pip3 install -r requirements.txt || true
+RUN pip3 install --break-system-packages -r requirements.txt || true
 
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
+RUN rm -rf /root/.config/code-server
+
 EXPOSE 8080
 
-CMD ["/start.sh"]
+ENTRYPOINT ["/start.sh"]
